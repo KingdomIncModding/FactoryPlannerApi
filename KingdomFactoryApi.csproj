@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Version>0.1.3</Version>
+    <AssemblyName>KingdomFactoryApi</AssemblyName>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GameRoot>$(MSBuildThisFileDirectory)..\..\</GameRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Core\*.cs"/><Compile Include="Plugin\*.cs"/>
+    <EmbeddedResource Include="Web\client.js" LogicalName="client.js"/>
+    <EmbeddedResource Include="Resources\catalog-index.json" LogicalName="catalog-index.json"/>
+    <EmbeddedResource Include="Resources\provenance.json" LogicalName="provenance.json"/>
+    <EmbeddedResource Include="openapi.json" LogicalName="openapi.json"/>
+    <EmbeddedResource Include="Resources\icons.zip" LogicalName="icons.zip"/>
+    <Reference Include="BepInEx"><HintPath>$(GameRoot)BepInEx\core\BepInEx.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(GameRoot)BepInEx\core\0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Assembly-CSharp"><HintPath>$(GameRoot)KingdomInc_Data\Managed\Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(GameRoot)KingdomInc_Data\Managed\UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(GameRoot)KingdomInc_Data\Managed\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

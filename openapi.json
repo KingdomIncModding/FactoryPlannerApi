@@ -1,0 +1,818 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Kingdom Inc Factory API",
+    "version": "0.1.3",
+    "description": "Read-only localhost snapshots and resumable change polling. Native/reference shapes follow the game version. See README for per-section fields and freshness semantics."
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:17840"
+    }
+  ],
+  "paths": {
+    "/api/v1": {
+      "get": {
+        "summary": "Discover API",
+        "operationId": "Discover_API",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Structured API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Structured API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "summary": "Read capture health",
+        "operationId": "Read_capture_health",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Structured API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Structured API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/catalog": {
+      "get": {
+        "summary": "Read game definitions",
+        "operationId": "Read_game_definitions",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Catalog"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Structured API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Structured API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Unchanged representation"
+          }
+        },
+        "parameters": [
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/snapshot": {
+      "get": {
+        "summary": "Read coherent game snapshot",
+        "operationId": "Read_coherent_game_snapshot",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Snapshot"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Structured API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Structured API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Unchanged representation"
+          }
+        },
+        "parameters": [
+          {
+            "name": "sections",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated section names; omitted means all."
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/sections/{name}": {
+      "get": {
+        "summary": "Read one snapshot section",
+        "operationId": "Read_one_snapshot_section",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Snapshot"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Structured API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Structured API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Unchanged representation"
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "session",
+                "research",
+                "unlocks",
+                "upgrades",
+                "resources",
+                "economy",
+                "factory",
+                "progression",
+                "native"
+              ]
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/changes": {
+      "get": {
+        "summary": "Read resumable section changes",
+        "operationId": "Read_resumable_section_changes",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Changes"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Structured API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Structured API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "after",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "instanceId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/client.js": {
+      "get": {
+        "summary": "Read client.js",
+        "responses": {
+          "200": {
+            "description": "Static integration resource",
+            "content": {
+              "text/javascript": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Unchanged"
+          }
+        }
+      }
+    },
+    "/api/v1/openapi.json": {
+      "get": {
+        "summary": "Read openapi.json",
+        "responses": {
+          "200": {
+            "description": "Static integration resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Unchanged"
+          }
+        }
+      }
+    },
+    "/api/v1/icons/{name}.png": {
+      "get": {
+        "summary": "Read bundled game icon",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PNG icon",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "contentEncoding": "binary"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Unchanged"
+          },
+          "404": {
+            "description": "Icon not bundled"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": [
+          "apiVersion",
+          "error"
+        ],
+        "properties": {
+          "apiVersion": {
+            "const": "1"
+          },
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Snapshot": {
+        "type": "object",
+        "required": [
+          "apiVersion",
+          "instanceId",
+          "sessionId",
+          "revision",
+          "capturedAtUtc",
+          "sections"
+        ],
+        "properties": {
+          "apiVersion": {
+            "const": "1"
+          },
+          "instanceId": {
+            "type": "string"
+          },
+          "sessionId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "capturedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sections": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "session": {
+                "type": "object",
+                "required": [
+                  "revision",
+                  "data"
+                ],
+                "properties": {
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "data": {
+                    "description": "Section-specific data; null without a loaded kingdom."
+                  }
+                }
+              },
+              "research": {
+                "type": "object",
+                "required": [
+                  "revision",
+                  "data"
+                ],
+                "properties": {
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "data": {
+                    "description": "Section-specific data; null without a loaded kingdom."
+                  }
+                }
+              },
+              "unlocks": {
+                "type": "object",
+                "required": [
+                  "revision",
+                  "data"
+                ],
+                "properties": {
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "data": {
+                    "description": "Section-specific data; null without a loaded kingdom."
+                  }
+                }
+              },
+              "upgrades": {
+                "type": "object",
+                "required": [
+                  "revision",
+                  "data"
+                ],
+                "properties": {
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "data": {
+                    "description": "Section-specific data; null without a loaded kingdom."
+                  }
+                }
+              },
+              "resources": {
+                "type": "object",
+                "required": [
+                  "revision",
+                  "data"
+                ],
+                "properties": {
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "data": {
+                    "description": "Section-specific data; null without a loaded kingdom."
+                  }
+                }
+              },
+              "economy": {
+                "type": "object",
+                "required": [
+                  "revision",
+                  "data"
+                ],
+                "properties": {
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "data": {
+                    "description": "Section-specific data; null without a loaded kingdom."
+                  }
+                }
+              },
+              "factory": {
+                "type": "object",
+                "required": [
+                  "revision",
+                  "data"
+                ],
+                "properties": {
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "data": {
+                    "description": "Factory workflows and optional measured telemetry. telemetry contains available, epoch, clockSeconds and cumulative transfers, deliveries, building earned/spent counters. Counter amounts are decimal integer strings. See README measured flow telemetry semantics."
+                  }
+                }
+              },
+              "progression": {
+                "type": "object",
+                "required": [
+                  "revision",
+                  "data"
+                ],
+                "properties": {
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "data": {
+                    "description": "Section-specific data; null without a loaded kingdom."
+                  }
+                }
+              },
+              "native": {
+                "type": "object",
+                "required": [
+                  "revision",
+                  "data"
+                ],
+                "properties": {
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "data": {
+                    "description": "Section-specific data; null without a loaded kingdom."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Health": {
+        "type": "object",
+        "required": [
+          "apiVersion",
+          "instanceId",
+          "revision",
+          "sessionId",
+          "status",
+          "stale",
+          "readOnly"
+        ],
+        "properties": {
+          "apiVersion": {
+            "const": "1"
+          },
+          "instanceId": {
+            "type": "string"
+          },
+          "sessionId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "status": {
+            "enum": [
+              "starting",
+              "noKingdom",
+              "live",
+              "error"
+            ]
+          },
+          "stale": {
+            "type": "boolean"
+          },
+          "readOnly": {
+            "const": true
+          },
+          "lastSampleAtUtc": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sampleIntervalSeconds": {
+            "type": "number"
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "Changes": {
+        "type": "object",
+        "required": [
+          "apiVersion",
+          "instanceId",
+          "sessionId",
+          "revision",
+          "resyncRequired",
+          "changes"
+        ],
+        "properties": {
+          "apiVersion": {
+            "const": "1"
+          },
+          "instanceId": {
+            "type": "string"
+          },
+          "sessionId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "resyncRequired": {
+            "type": "boolean"
+          },
+          "changes": {
+            "type": "array",
+            "maxItems": 256,
+            "items": {
+              "type": "object",
+              "required": [
+                "revision",
+                "sessionId",
+                "capturedAtUtc",
+                "sections"
+              ],
+              "properties": {
+                "revision": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "sessionId": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "capturedAtUtc": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "sections": {
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "session",
+                      "research",
+                      "unlocks",
+                      "upgrades",
+                      "resources",
+                      "economy",
+                      "factory",
+                      "progression",
+                      "native"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Catalog": {
+        "type": "object",
+        "required": [
+          "apiVersion",
+          "gameVersion",
+          "items",
+          "recipes",
+          "research",
+          "buildingTypes",
+          "upgradeTypes",
+          "referenceMatchesRuntime"
+        ],
+        "properties": {
+          "apiVersion": {
+            "const": "1"
+          },
+          "gameVersion": {
+            "type": "string"
+          },
+          "referenceMatchesRuntime": {
+            "type": "boolean"
+          },
+          "runtimeAssemblySha256": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "recipes": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "research": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "buildingTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "upgradeTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reference": {
+            "type": "object"
+          },
+          "provenance": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}
