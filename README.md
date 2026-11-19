@@ -1,6 +1,6 @@
 # Kingdom Inc Factory API — 0.1.3
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6V62AX30M)
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/urakkaamyx/tip)
 
 The data foundation for an external Factory Planner. The game publishes a read-only API at **http://127.0.0.1:17840/api/v1** while it runs. A browser client can use a separate window or monitor. This project does not implement a planner UI or change the factory.
 
@@ -136,4 +136,4 @@ Install with the game closed, then launch the game and load a kingdom. A previou
 
 If you enjoy these Kingdom Inc mods and tools, consider supporting development on Ko-fi!
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6V62AX30M)
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/urakkaamyx/tip)
