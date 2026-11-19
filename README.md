@@ -1,5 +1,7 @@
 # Kingdom Inc Factory API — 0.1.3
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6V62AX30M)
+
 The data foundation for an external Factory Planner. The game publishes a read-only API at **http://127.0.0.1:17840/api/v1** while it runs. A browser client can use a separate window or monitor. This project does not implement a planner UI or change the factory.
 
 For the complete browser application, use Factory Planner. This download contains the API plugin, its browser SDK and API contract.
@@ -129,3 +131,9 @@ A read-only Harmony observer wraps building updates/manual crafts and successful
 Container profit is scoped: owned destination income plus attributable external sales, minus operating costs of buildings in the container (including descendants). Shared/imported production costs are not allocated. Separate currencies remain separate. If external income or item provenance cannot be attributed, clients display it as unavailable rather than estimating it. Counter epochs change on kingdom replacement or observer restart. Topology changes and reconnect gaps require a fresh client rate window.
 
 Install with the game closed, then launch the game and load a kingdom. A previous API binary has no measured counters; the dashboard can show final product topology but leaves measured rates pending. If patch installation fails, `available=false` includes a reason and the rest of the API remains usable. The opt-in main-menu diagnostic checks real patched transfer and Shop sale paths without loading or saving a kingdom.
+
+## Support
+
+If you enjoy these Kingdom Inc mods and tools, consider supporting development on Ko-fi!
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6V62AX30M)
